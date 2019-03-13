@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 //Connect to mongodb using mongoose
-mongoose.connect("mongodb://localhost:3000/gameentries", {
+mongoose.connect("mongodb://localhost:27017/gameentries", {
     useMongoClient:true}).then(function(){
         console.log("MongoDB Connected")})
         .catch(function(err){console.log(err)});
@@ -28,15 +28,12 @@ app.use(bodyParser.json());
 router.get('/', function(req,res){
     res.sendfile(path.join(__dirname+'/index.html'));
 });
-router.get('/addtolist', function(req, res) {
-    res.sendFile(path.join(__dirname + '/views/topic1.html'));
-});
 
 app.post('/entrylist', function(req,res){
     res.redirect('/entries.html');
 });
 
-app.get('/getdata', function(req,res){
+app.get('/getListData', function(req,res){
     console.log("request made from fetch");
     Entry.find({}).then(function(entries){
         res.send({
@@ -62,7 +59,7 @@ router.get('/signup', function(req,res) {
 });
 
 //Post from form on index.html
-app.post('/', function(req,res){
+app.post('/addtolist', function(req,res){
    console.log(req.body);
    var newEntry = {
        Like: req.body.Like,
@@ -75,7 +72,7 @@ app.post('/', function(req,res){
 
 //routs for paths
 app.use(express.static(__dirname+'/views'));
-app.use(express.static(__dirname+'/scripts'));
+app.use(express.static(path.join(__dirname, '/scripts')));
 app.use(express.static(__dirname+'/entries'));
 app.use('/', router);
 //starts server
